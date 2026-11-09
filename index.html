@@ -1,0 +1,163 @@
+index.html<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JALIL SHOP | فروشگاه لوازم خودرو</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;font-family:Tahoma,Arial;
+ background:#f4f8ff;color:#172b4d
+}
+header{
+ background:white;padding:18px 7%;
+ display:flex;justify-content:space-between;
+ align-items:center;box-shadow:0 2px 12px #dce7f5;
+ position:sticky;top:0;z-index:5
+}
+.logo{font-size:25px;font-weight:bold;color:#1265c5}
+button{
+ border:0;border-radius:10px;padding:12px 18px;
+ background:#176bd1;color:white;cursor:pointer;
+ font-weight:bold
+}
+.hero{
+ margin:25px auto;padding:45px 25px;
+ max-width:1100px;border-radius:22px;
+ background:linear-gradient(120deg,#1265c5,#65a9f7);
+ color:white;text-align:center
+}
+.hero h1{font-size:32px}
+.hero p{line-height:2}
+.search{
+ display:block;width:90%;max-width:600px;
+ margin:25px auto;padding:15px;
+ border:1px solid #cbdcf2;border-radius:12px;
+ font-size:16px
+}
+.products{
+ max-width:1100px;margin:30px auto;padding:15px;
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:20px
+}
+.card{
+ background:white;border-radius:18px;padding:20px;
+ box-shadow:0 5px 20px #dce7f5;text-align:center
+}
+.product-icon{
+ background:#eaf3ff;border-radius:14px;
+ padding:30px;font-size:55px
+}
+.card h3{color:#175eaf}
+.price{color:#176bd1;font-weight:bold}
+.card button{width:100%;margin-top:12px}
+footer{
+ text-align:center;background:#103d73;
+ color:white;padding:25px;margin-top:40px
+}
+#cart{
+ position:fixed;bottom:20px;left:20px;
+ z-index:10;box-shadow:0 4px 15px #9bbde5
+}
+#cartPanel{
+ display:none;position:fixed;inset:10%;
+ background:white;z-index:20;padding:25px;
+ border-radius:18px;overflow:auto;
+ box-shadow:0 0 0 100vmax #0008
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">JALIL SHOP</div>
+ <div>فروشگاه لنت و قطعات خودرو</div>
+</header>
+
+<section class="hero">
+ <h1>به JALIL SHOP خوش آمدید</h1>
+ <p>خرید آسان قطعات خودرو با تجربه‌ای مطمئن</p>
+ <button onclick="document.getElementById('products').scrollIntoView()">
+ مشاهده محصولات
+ </button>
+</section>
+
+<input class="search" id="search"
+ placeholder="🔍 جستجوی محصول..."
+ oninput="renderProducts()">
+
+<h2 style="text-align:center">محصولات فروشگاه</h2>
+
+<main class="products" id="products"></main>
+
+<button id="cart" onclick="openCart()">
+ 🛒 سبد خرید (<span id="count">0</span>)
+</button>
+
+<div id="cartPanel">
+ <h2>سبد خرید شما</h2>
+ <div id="cartItems"></div>
+ <button onclick="closeCart()">بستن</button>
+</div>
+
+<footer>
+ <h3>JALIL SHOP</h3>
+ <p>فروشگاه اینترنتی لوازم خودرو</p>
+ <p>تمام حقوق محفوظ است © 2026</p>
+</footer>
+
+<script>
+const products=[
+ {id:1,name:"لنت ترمز پراید",price:"استعلام قیمت",icon:"🚗"},
+ {id:2,name:"لنت ترمز پژو 206",price:"استعلام قیمت",icon:"🚙"},
+ {id:3,name:"لنت ترمز سمند",price:"استعلام قیمت",icon:"🚘"},
+ {id:4,name:"لنت ترمز تیبا",price:"استعلام قیمت",icon:"🚗"}
+];
+
+let cart=[];
+
+function renderProducts(){
+ const q=document.getElementById("search").value.trim();
+ const list=products.filter(p=>p.name.includes(q));
+ document.getElementById("products").innerHTML=list.map(p=>
+ <div class="card">
+  <div class="product-icon">${p.icon}</div>
+  <h3>${p.name}</h3>
+  <p class="price">${p.price}</p>
+  <button onclick="addCart(${p.id})">افزودن به سبد خرید</button>
+ </div>
+ ).join("") || "<p>محصولی پیدا نشد.</p>";
+}
+
+function addCart(id){
+ const p=products.find(x=>x.id===id);
+ const item=cart.find(x=>x.id===id);
+ if(item)item.qty++;
+ else cart.push({...p,qty:1});
+ updateCart();
+}
+
+function updateCart(){
+ document.getElementById("count").innerText=
+ cart.reduce((s,p)=>s+p.qty,0);
+
+ document.getElementById("cartItems").innerHTML=
+ cart.map(p=>
+ <p>${p.name} — تعداد: ${p.qty}</p>
+ ).join("") || "سبد خرید خالی است.";
+}
+
+function openCart(){
+ document.getElementById("cartPanel").style.display="block";
+}
+function closeCart(){
+ document.getElementById("cartPanel").style.display="none";
+}
+
+renderProducts();
+updateCart();
+</script>
+
+</body>
+</html>
